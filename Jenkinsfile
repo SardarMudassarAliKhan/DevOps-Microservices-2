@@ -34,8 +34,8 @@ pipeline {
                     sh 'chmod -R 777 /home/ubuntu/app-uploads'
                     
                     echo 'Stopping old active container if it exists...'
-                    sh 'docker stop ntl-oneclick-web || true'
-                    sh 'docker rm ntl-oneclick-web || true'
+                    sh 'docker stop microservice-2-web || true'
+                    sh 'docker rm microservice-2-web || true'
                     
                     echo 'Checking availability of Loki logging driver...'
                     def lokiAvailable = sh(script: "docker plugin ls --format '{{.Name}}' | grep -q 'loki'", returnStatus: true) == 0
@@ -47,7 +47,7 @@ pipeline {
                     echo "Running new container with logging strategy: ${lokiAvailable ? 'Loki' : 'JSON File Fallback'}..."
                     
                     sh '''
-                        docker run -d --restart always --name ntl-oneclick-web \
+                        docker run -d --restart always --name microservice-2-web \
                         ''' + loggingOpts + ''' \
                         --env "ASPNETCORE_ENVIRONMENT=Production" \
                         --env "ASPNETCORE_URLS=http://0.0.0.0:8080" \
